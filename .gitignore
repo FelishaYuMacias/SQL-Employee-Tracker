@@ -103,5 +103,5 @@ dist
 # TernJS port file
 .tern-port
 
-# instructions folder with challange readme and images
+# ignore challange readme and assets
 instructions/
