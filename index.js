@@ -1,13 +1,16 @@
+require("dotenv").config();
+
 const inquirer = require("inquirer")
-const mySql2 = require("mysql2");
+const mysql = require("mysql2");
 const { start } = require("repl");
 
+const PORT = process.env.PORT || 3001;
 const db = mysql.createConnection(
     {
-      host: 'localhost',
-      user: 'root',
-      password: 'password',
-      database: 'employee_tracker_db'
+    host: 'localhost',
+    user: process.env.DB_USER,
+    password: process.env.DB_PASSWORD,
+    database: process.env.DB_NAME
     },
     console.log(`Connected to the employee_tracker_db.`)
   );
@@ -53,9 +56,19 @@ function startQuestion() {
         }
     })
 }
-
+//function to view all departments
 function viewDeparments () {
-console.log("table showing department names and department ids")
+    db.query('SELECT * FROM department',(err, data)=>{
+            if(err){
+                console.log(err);
+                return res.status(500).json({
+                    msg:"oh shucks!",
+                    err:err
+                })
+            } else {
+                    console.table(data)
+                    }
+            })
 startQuestion()
 }
 
