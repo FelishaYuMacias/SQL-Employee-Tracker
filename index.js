@@ -73,7 +73,17 @@ startQuestion()
 }
 
 function viewRoles () {
-    console.log("job title, role id, the department that role belongs to, and the salary for that role")
+    db.query('SELECT * FROM role',(err, data)=>{
+        if(err){
+            console.log(err);
+            return res.status(500).json({
+                msg:"oh shucks!",
+                err:err
+            })
+        } else {
+                console.table(data)
+                }
+        })
     startQuestion()
     }
 
