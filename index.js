@@ -100,13 +100,49 @@ function viewEmployees () {
 }
 
 function addDeparment () {
-    console.log("prompted to enter the name of the department and that department is added to the database")
-    startQuestion()
+    inquirer.prompt({
+        name: "dept_name",
+        message: "What is the name of the department?",
+        type: "input"
+    }).then(({ dept_name }) => {
+        db.query("INSERT INTO department(dept_name)VALUES(?)",[dept_name],(err,data)=>{
+            if(err){
+                console.log(err);
+                res.status(500).json({
+                    msg:"oh shucks!",
+                    err:err
+                })
+            } else {    
+            console.log("Department added!")
+                    }
+                })
+    })
+ 
 }
 
 function addRole () {
-    console.log("prompted to enter the name, salary, and department for the role and that role is added to the database")
-    startQuestion()
+    inquirer.prompt({
+        name: "title",
+        message: "What is the title of the role?",
+        type: "input"
+    },
+    {
+        name: "salary",
+        message: "What is the salary of the role?",
+        type: "number" 
+    }).then(({ title }) => {
+        db.query("INSERT INTO role(title)VALUES(?)",[title],(err,data)=>{
+            if(err){
+                console.log(err);
+                res.status(500).json({
+                    msg:"oh shucks!",
+                    err:err
+                })
+            } else {    
+            console.log("Role added!")
+                    }
+                })
+    })
 }
 
 function addEmployee () {
