@@ -58,7 +58,7 @@ function startQuestion() {
 }
 //function to view all departments
 function viewDeparments () {
-    db.query('SELECT * FROM department',(err, data)=>{
+    db.query('SELECT department.id, department.dept_name AS department FROM department',(err, data)=>{
             if(err){
                 console.log(err);
                 return res.status(500).json({
@@ -86,13 +86,20 @@ function viewRoles () {
     }
 
 function viewEmployees () {
-    db.query('SELECT employee.id AS id, employee.first_name AS first_name, employee.last_name AS last_name, role.title AS job_title, department.dept_name AS department, role.salary AS salary, employee.manager_id as manager FROM employee JOIN role ON employee.role_id = role.id JOIN department on role.department_id = department.id',(err, data)=>{
+    db.query(`
+    SELECT employee.id, 
+    employee.first_name, 
+    employee.last_name, 
+    role.title,
+    department.dept_name AS department, 
+    role.salary, 
+    CONCAT(manager.first_name, ' ', manager.last_name) AS manager 
+    FROM employee 
+    JOIN role ON employee.role_id = role.id 
+    LEFT JOIN department ON role.department_id = department.id
+    LEFT JOIN employee manager ON manager.id=employee.manager_id`,(err, data)=>{
         if(err){
             console.log(err);
-            return res.status(500).json({
-                msg:"oh shucks!",
-                err:err
-            })
         } else {
                 console.table(data)
                 }
@@ -105,7 +112,7 @@ function addDeparment () {
         message: "What is the name of the department?",
         type: "input"
     }).then(({ dept_name }) => {
-        db.query("INSERT INTO department(dept_name)VALUES(?)",[dept_name],(err,data)=>{
+        db.query("INSERT INTO department(dept_name)VALUES(?)",[dept_name],(err)=>{
             if(err){
                 console.log(err);
                 res.status(500).json({
@@ -192,7 +199,31 @@ function addEmployee () {
 }
 
 function updateEmployee () {
-    console.log("prompted to select an employee to update and their new role and this information is updated in the database")
+    
+    inquirer.prompt([
+        {
+            name: "employee_id",
+            message: "What is the id of the employee you want to update?",
+            type: "input"
+        },
+        {
+            name: "newRole_id",
+            message: "What is the employee's new role id?",
+            type: "input" 
+        }
+    ]).then(({newRole_id,employee_id }) => {
+        db.query("UPDATE employee SET employee.role_id = ? WHERE id=?",[newRole_id,employee_id],(err)=>{
+            if(err){
+                console.log(err);
+                res.status(500).json({
+                    msg:"oh shucks!",
+                    err:err
+                })
+            } else {    
+            console.log("Employee role updated!")
+                    }
+                })
+    })
 }
 
 startQuestion ();
