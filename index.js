@@ -15,6 +15,7 @@ const db = mysql.createConnection(
     console.log(`Connected to the employee_tracker_db.`)
   );
 
+
 function startQuestion() {
 
     inquirer
@@ -23,7 +24,7 @@ function startQuestion() {
             type: 'list',
             message: 'What would you like to do?',
             name: 'choices',
-            choices: ["View all departments", "View all roles", "View all employees", "Add a department", "Add a role", "Add an employee", "Update an employee role","Exit"]
+            choices: ["View all departments", "View all roles", "View all employees", "Add a department", "Add a role", "Add an employee", "Update an employee role", "Update employee manager", "Exit"]
     
         }
     ]).then ((response)=>{
@@ -50,6 +51,9 @@ function startQuestion() {
             case "Update an employee role":
                 updateEmployee();
                 break;
+            case "Update employee manager":
+                    updateManager();
+                    break;
             default:
                 console.log("See you next time!");
                 break;
@@ -225,5 +229,27 @@ function updateEmployee () {
                 })
     })
 }
-
+function updateManager () {
+    
+    inquirer.prompt([
+        {
+            name: "employee_id",
+            message: "What is the id of the employee you want to update?",
+            type: "input"
+        },
+        {
+            name: "newManager_id",
+            message: "What is the employee's new Manager id?",
+            type: "input" 
+        }
+    ]).then(({newManager_id,employee_id }) => {
+        db.query("UPDATE employee SET employee.manager_id = ? WHERE id=?",[newManager_id,employee_id],(err)=>{
+            if(err){
+                console.log(err);
+            } else {    
+            console.log("Employee Manager updated!")
+                    }
+                })
+    })
+}
 startQuestion ();
