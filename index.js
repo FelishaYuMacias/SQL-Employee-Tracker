@@ -121,17 +121,27 @@ function addDeparment () {
 }
 
 function addRole () {
-    inquirer.prompt({
-        name: "title",
-        message: "What is the title of the role?",
-        type: "input"
-    },
-    {
-        name: "salary",
-        message: "What is the salary of the role?",
-        type: "number" 
-    }).then(({ title }) => {
-        db.query("INSERT INTO role(title)VALUES(?)",[title],(err,data)=>{
+    inquirer.prompt([
+
+        {
+            name: "title",
+            message: "What is the title of the role?",
+            type: "input"
+        },
+        {
+            name: "salary",
+            message: "What is the salary of the role?",
+            type: "input" 
+        },
+        {
+            name: "department_id",
+            message: "What is the department id?",
+            type: "input"
+        }
+    ]
+    
+    ).then(({title,salary,department_id }) => {
+        db.query("INSERT INTO role(title,salary,department_id)VALUES(?,?,?)",[title,salary,department_id],(err,data)=>{
             if(err){
                 console.log(err);
                 res.status(500).json({
