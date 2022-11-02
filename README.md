@@ -90,7 +90,10 @@ See video below for walkthrough.
 
 
 ### Screenshots
-![alt text](assets/images/screenshot.png)
+![Start Prompts](assets/images/startPrompts.png)
+![View Options](assets/images/viewOptions.png)
+![Add Options](assets/images/addOptions.png)
+![Update Options](assets/images/updateOptions.png)
 
 ## Credits
 
