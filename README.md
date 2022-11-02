@@ -82,10 +82,6 @@ Then run the following command, use arrows to select your choice, hit enter then
 ```md
 node index.js
 ``` 
-Hit Ctrl+C to exit, then run the following command to start again.
-```md
-node index.js
-``` 
 See video below for walkthrough.
 
 

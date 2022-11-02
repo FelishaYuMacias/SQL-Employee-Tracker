@@ -56,6 +56,7 @@ function startQuestion() {
                     break;
             default:
                 console.log("See you next time!");
+                db.end();
                 break;
         }
     })
@@ -67,6 +68,8 @@ function viewDeparments () {
                 console.log(err);
             } else {
                     console.table(data)
+                    console.log("See Table")
+                    startQuestion ()
                     }
             })
     
@@ -78,6 +81,8 @@ function viewRoles () {
             console.log(err);
         } else {
                 console.table(data)
+                console.log("See Table")
+                    startQuestion ()
                 }
         })
 
@@ -100,6 +105,8 @@ function viewEmployees () {
             console.log(err);
         } else {
                 console.table(data)
+                console.log("See Table")
+                    startQuestion ()
                 }
         })
 
@@ -116,6 +123,7 @@ function addDeparment () {
                 console.log(err);
             } else {    
             console.log("Department added!")
+                    startQuestion ()
                     }
                 })
     })
@@ -145,6 +153,7 @@ function addRole () {
                 console.log(err);
             } else {    
             console.log("Role added!")
+            startQuestion ()
                     }
                 })
     })
@@ -181,6 +190,7 @@ function addEmployee () {
                     console.log(err);
                 } else {    
                 console.log("Employee added!")
+                startQuestion ()
                         }
                     }) 
         } else {
@@ -189,6 +199,7 @@ function addEmployee () {
                     console.log(err);
                 } else {    
                 console.log("Employee added!")
+                startQuestion ()
                         }
                     })
         }
@@ -214,6 +225,7 @@ function updateEmployee () {
                 console.log(err);
             } else {    
             console.log("Employee role updated!")
+            startQuestion ()
                     }
                 })
     })
@@ -237,6 +249,7 @@ function updateManager () {
                 console.log(err);
             } else {    
             console.log("Employee Manager updated!")
+            startQuestion ()
                     }
                 })
     })
