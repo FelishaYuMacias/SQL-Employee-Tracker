@@ -65,28 +65,22 @@ function viewDeparments () {
     db.query('SELECT department.id, department.dept_name AS department FROM department',(err, data)=>{
             if(err){
                 console.log(err);
-                return res.status(500).json({
-                    msg:"oh shucks!",
-                    err:err
-                })
             } else {
                     console.table(data)
                     }
             })
+    
 }
 
 function viewRoles () {
     db.query('SELECT role.id AS id, role.title AS title, department.dept_name AS department, role.salary AS salary FROM role JOIN department ON role.department_id = department.id',(err, data)=>{
         if(err){
             console.log(err);
-            return res.status(500).json({
-                msg:"oh shucks!",
-                err:err
-            })
         } else {
                 console.table(data)
                 }
         })
+
     }
 
 function viewEmployees () {
@@ -108,6 +102,7 @@ function viewEmployees () {
                 console.table(data)
                 }
         })
+
 }
 
 function addDeparment () {
@@ -119,16 +114,11 @@ function addDeparment () {
         db.query("INSERT INTO department(dept_name)VALUES(?)",[dept_name],(err)=>{
             if(err){
                 console.log(err);
-                res.status(500).json({
-                    msg:"oh shucks!",
-                    err:err
-                })
             } else {    
             console.log("Department added!")
                     }
                 })
     })
- 
 }
 
 function addRole () {
@@ -153,10 +143,6 @@ function addRole () {
         db.query("INSERT INTO role(title,salary,department_id)VALUES(?,?,?)",[title,salary,department_id],(err,data)=>{
             if(err){
                 console.log(err);
-                res.status(500).json({
-                    msg:"oh shucks!",
-                    err:err
-                })
             } else {    
             console.log("Role added!")
                     }
@@ -188,17 +174,24 @@ function addEmployee () {
             type: "input"
         }
     ]).then(({first_name,last_name,role_id, manager_id }) => {
-        db.query("INSERT INTO employee(first_name,last_name,role_id, manager_id)VALUES(?,?,?,?)",[first_name,last_name,role_id, manager_id],(err,data)=>{
-            if(err){
-                console.log(err);
-                res.status(500).json({
-                    msg:"oh shucks!",
-                    err:err
-                })
-            } else {    
-            console.log("Employee added!")
-                    }
-                })
+        //allows for no manager id
+        if (manager_id){
+            db.query("INSERT INTO employee(first_name,last_name,role_id, manager_id)VALUES(?,?,?,?)",[first_name,last_name,role_id, manager_id],(err,data)=>{
+                if(err){
+                    console.log(err);
+                } else {    
+                console.log("Employee added!")
+                        }
+                    }) 
+        } else {
+            db.query("INSERT INTO employee(first_name,last_name,role_id)VALUES(?,?,?)",[first_name,last_name,role_id],(err,data)=>{
+                if(err){
+                    console.log(err);
+                } else {    
+                console.log("Employee added!")
+                        }
+                    })
+        }
     })
 }
 
@@ -219,10 +212,6 @@ function updateEmployee () {
         db.query("UPDATE employee SET employee.role_id = ? WHERE id=?",[newRole_id,employee_id],(err)=>{
             if(err){
                 console.log(err);
-                res.status(500).json({
-                    msg:"oh shucks!",
-                    err:err
-                })
             } else {    
             console.log("Employee role updated!")
                     }
