@@ -49,7 +49,7 @@ function startQuestion() {
                 addEmployee();
                 break;
             case "Update an employee role":
-                updateEmployee();
+                updateRole();
                 break;
             case "Update employee manager":
                     updateManager();
@@ -206,7 +206,7 @@ function addEmployee () {
     })
 }
 
-function updateEmployee () {
+function updateRole () {
     
     inquirer.prompt([
         {
