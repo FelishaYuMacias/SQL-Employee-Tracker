@@ -206,30 +206,69 @@ function addEmployee () {
         }
     })
 }
-//function to update the role of an existing employee
-function updateRole () {
-    
-    inquirer.prompt([
-        {
-            name: "employee_id",
-            message: "What is the id of the employee you want to update?",
-            type: "input"
-        },
-        {
-            name: "newRole_id",
-            message: "What is the employee's new role id?",
-            type: "input" 
-        }
-    ]).then(({newRole_id,employee_id }) => {
-        db.query("UPDATE employee SET employee.role_id = ? WHERE id=?",[newRole_id,employee_id],(err)=>{
-            if(err){
-                console.log(err);
-            } else {    
-            console.log("Employee role updated!")
-            startQuestion ()
-                    }
-                })
-    })
+//functions to update the role of an existing employee
+
+function updateRole(){
+    db.query(`SELECT employee.id, 
+        employee.first_name, 
+        employee.last_name, 
+        role.title,
+        department.dept_name AS department, 
+        role.salary, 
+        CONCAT(manager.first_name, ' ', manager.last_name) AS manager 
+        FROM employee 
+        JOIN role ON employee.role_id = role.id 
+        LEFT JOIN department ON role.department_id = department.id
+        LEFT JOIN employee manager ON manager.id=employee.manager_id`,(err, res)=>{
+    if(err)throw err;
+    const employees = res.map(({ id, first_name, last_name }) => ({
+      value: id,
+       name: `${first_name} ${last_name}`      
+    }));
+    getRole(employees);
+  });
+}
+
+function getRole(employees){
+db.query(`SELECT 
+role.id, 
+role.title, 
+FROM role`,(err, res)=>{
+  if(err)throw err;
+  let roleChoices = res.map(({ id, title,}) => ({
+    value: id, 
+    name: `${title}`      
+  }));
+  getUpdatedRole(employees, roleChoices);
+});
+}
+
+function getUpdatedRole(employees, roleChoices) {
+inquirer
+  .prompt([
+    {
+      name: "employee_id",
+      message: "Which employee do you want to update?",
+      type: "list",
+      choices: employees
+    },
+    {
+      name: "newRole_id",
+      message: "What is the employee's new role?",
+      type: "list",
+      choices: roleChoices
+    },
+
+  ]).then(({newRole_id,employee_id }) => {
+      db.query("UPDATE employee SET employee.role_id = ? WHERE id=?",[newRole_id,employee_id],(err)=>{
+          if(err){
+              console.log(err);
+          } else {    
+          console.log("Employee role updated!")
+          startQuestion ()
+                  }
+      });
+  });
 }
 //function to update an existing employee's manager
 function updateManager () {
