@@ -103,5 +103,6 @@ dist
 # TernJS port file
 .tern-port
 
-# ignore challange readme and assets
+# ignore challange readme and assets and indexcopy
 instructions/
+indexcopy.js

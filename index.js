@@ -233,28 +233,40 @@ function updateRole () {
 }
 //function to update an existing employee's manager
 function updateManager () {
-    
-    inquirer.prompt([
-        {
-            name: "employee_id",
-            message: "What is the id of the employee you want to update?",
-            type: "input"
-        },
-        {
-            name: "newManager_id",
-            message: "What is the employee's new Manager id?",
-            type: "input" 
+    db.query("SELECT * FROM employee", (err, results)=>{
+        if(err)throw err;
+            console.log(results)
+            const choices = results.map(choice =>{
+                return {
+                    name:`${choice.first_name} ${choice.last_name}`, value:`${choice.id}`
+                }
+            })
+            inquirer.prompt([
+                {
+                    name: "employee_id",
+                    message: "Which employee do you want to update?",
+                    type: "list",
+                    choices: choices
+                },
+                {
+                    name: "newManager_id",
+                    message: "Who is the employee's new Manager?",
+                    type: "list",
+                    choices: choices
+                }
+            ]).then(({newManager_id,employee_id }) => {
+                db.query("UPDATE employee SET employee.manager_id = ? WHERE id=?",[newManager_id,employee_id],(err)=>{
+                    if(err){
+                        console.log(err);
+                    } else {    
+                    console.log("Employee Manager updated!")
+                    startQuestion ()
+                            }
+                        })
+            })
         }
-    ]).then(({newManager_id,employee_id }) => {
-        db.query("UPDATE employee SET employee.manager_id = ? WHERE id=?",[newManager_id,employee_id],(err)=>{
-            if(err){
-                console.log(err);
-            } else {    
-            console.log("Employee Manager updated!")
-            startQuestion ()
-                    }
-                })
-    })
+    )
+    
 }
 //Calling the function so prompts will appear on open
 startQuestion ();
