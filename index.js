@@ -131,33 +131,42 @@ function addDeparment () {
 }
 //function to add a new role
 function addRole () {
-    inquirer.prompt([
+    db.query('SELECT department.id, department.dept_name AS department FROM department',(err, res)=>{
+  if(err)throw err;
+  let deptChoices = res.map(({ id, department,}) => ({
+    value: id, 
+    name: `${department}`      
+  }));
+  
+  inquirer.prompt([
 
-        {
-            name: "title",
-            message: "What is the title of the role?",
-            type: "input"
-        },
-        {
-            name: "salary",
-            message: "What is the salary of the role?",
-            type: "input" 
-        },
-        {
-            name: "department_id",
-            message: "What is the department id?",
-            type: "input"
-        }
-    ]).then(({title,salary,department_id }) => {
-        db.query("INSERT INTO role(title,salary,department_id)VALUES(?,?,?)",[title,salary,department_id],(err,data)=>{
-            if(err){
-                console.log(err);
-            } else {    
-            console.log("Role added!")
-            startQuestion ()
-                    }
-                })
-    })
+      {
+          name: "title",
+          message: "What is the title of the role?",
+          type: "input"
+      },
+      {
+          name: "salary",
+          message: "What is the salary of the role?",
+          type: "input" 
+      },
+      {
+          name: "department_id",
+          message: "What is the department?",
+          type: "list",
+          choices: deptChoices
+      }
+  ]).then(({title,salary,department_id }) => {
+      db.query("INSERT INTO role(title,salary,department_id)VALUES(?,?,?)",[title,salary,department_id],(err,data)=>{
+          if(err){
+              console.log(err);
+          } else {    
+          console.log("Role added!")
+          startQuestion ()
+                  }
+              })
+  })
+});
 }
 //funcion to add a new employee
 function addEmployee () {
