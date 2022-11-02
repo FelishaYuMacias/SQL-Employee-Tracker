@@ -1,10 +1,10 @@
+//dotenv to encrypt mysql password
 require("dotenv").config();
-
+// instantiate Inquirer and MySql2
 const inquirer = require("inquirer")
 const mysql = require("mysql2");
-const { start } = require("repl");
 
-const PORT = process.env.PORT || 3001;
+//adding connection to db
 const db = mysql.createConnection(
     {
     host: 'localhost',
@@ -15,7 +15,7 @@ const db = mysql.createConnection(
     console.log(`Connected to the employee_tracker_db.`)
   );
 
-
+//function to start list of options 
 function startQuestion() {
 
     inquirer
@@ -27,6 +27,7 @@ function startQuestion() {
             choices: ["View all departments", "View all roles", "View all employees", "Add a department", "Add a role", "Add an employee", "Update an employee role", "Update employee manager", "Exit"]
     
         }
+        //calling the appropriate function for each response
     ]).then ((response)=>{
         console.log(response)
         switch (response.choices){
@@ -74,7 +75,7 @@ function viewDeparments () {
             })
     
 }
-
+//function to view all roles
 function viewRoles () {
     db.query('SELECT role.id AS id, role.title AS title, department.dept_name AS department, role.salary AS salary FROM role JOIN department ON role.department_id = department.id',(err, data)=>{
         if(err){
@@ -87,7 +88,7 @@ function viewRoles () {
         })
 
     }
-
+//function to view all employees
 function viewEmployees () {
     db.query(`
     SELECT employee.id, 
@@ -111,7 +112,7 @@ function viewEmployees () {
         })
 
 }
-
+//function to add a new department
 function addDeparment () {
     inquirer.prompt({
         name: "dept_name",
@@ -128,7 +129,7 @@ function addDeparment () {
                 })
     })
 }
-
+//function to add a new role
 function addRole () {
     inquirer.prompt([
 
@@ -158,7 +159,7 @@ function addRole () {
                 })
     })
 }
-
+//funcion to add a new employee
 function addEmployee () {
     inquirer.prompt([
 
@@ -205,7 +206,7 @@ function addEmployee () {
         }
     })
 }
-
+//function to update the role of an existing employee
 function updateRole () {
     
     inquirer.prompt([
@@ -230,6 +231,7 @@ function updateRole () {
                 })
     })
 }
+//function to update an existing employee's manager
 function updateManager () {
     
     inquirer.prompt([
@@ -254,4 +256,5 @@ function updateManager () {
                 })
     })
 }
+//Calling the function so prompts will appear on open
 startQuestion ();
