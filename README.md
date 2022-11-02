@@ -1,8 +1,7 @@
 # SQL-Employee-Tracker
 Module 12 Challenge
-## Table of Contents
 
-If your README is long, add a table of contents to make it easy for users to find what they need.
+## Table of Contents
 
 - [Description](#description)
 - [Installation](#installation)
@@ -48,10 +47,6 @@ THEN I am prompted to select an employee to update and their new role and this i
 
 ## Installation
 
-* If you do not have node.js installed click the link below to install the LTS version.
-
-    https://nodejs.org/en/
-
 * Clone this repository to your local machine.
 
 * Right click on index.js and select "Open in Integrated Terminal"
@@ -78,12 +73,16 @@ SOURCE db/seeds.sql;
 exit
 ``` 
 
-Then run the following command, use arrows to select your choice, hit enter then, if applicable, and answer the prompts.
+Run the following command 
 ```md
 node index.js
 ``` 
+Then use arrow keys to navigate through the options. Hit enter and, if applicable, answer the prompts.
+
+
 See video below for walkthrough.
 
+https://drive.google.com/file/d/1dUM5SJLsQQVuR8Isvv0u-b9a6Z0OuVJ0/view
 
 ### Screenshots
 ![Start Prompts](assets/images/startPrompts.png)
