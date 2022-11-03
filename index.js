@@ -72,8 +72,7 @@ function viewDeparments () {
                     console.log("See Table")
                     startQuestion ()
                     }
-            })
-    
+            })  
 }
 //function to view all roles
 function viewRoles () {
@@ -182,6 +181,7 @@ function addEmployee() {
 }
 function employeeRoles(roleOptions) {
     db.query("SELECT * FROM employee", (err, results)=>{
+        if(err)throw err;
             const managerOptions = results.map(manager =>{
                 return {
                     name:`${manager.first_name} ${manager.last_name}`, value:`${manager.id}`
@@ -222,21 +222,23 @@ function employeeRoles(roleOptions) {
             startQuestion ()
                     }
                 }) 
-    } else {
-        db.query("INSERT INTO employee(first_name,last_name,role_id)VALUES(?,?,?)",[first_name,last_name,role_id],(err)=>{
-            if(err){
+            )
+        } else {
+                db.query("INSERT INTO employee(first_name,last_name,role_id)VALUES(?,?,?)",[first_name,last_name,role_id],(err)=>{
+                 if(err){
                 console.log(err);
-            } else {    
-            console.log("Employee added!")
-            startQuestion ()
+                } else {    
+                    console.log("Employee added!")
+                    startQuestion ()
                     }
                 })
-    }
-})
-}
-)
+            }
+        })
 
+    })
 }
+
+
 //functions to update the role of an existing employee
 
 function updateRole(){
@@ -305,7 +307,6 @@ inquirer
 function updateManager () {
     db.query("SELECT * FROM employee", (err, results)=>{
         if(err)throw err;
-            console.log(results)
             const choices = results.map(choice =>{
                 return {
                     name:`${choice.first_name} ${choice.last_name}`, value:`${choice.id}`
