@@ -82,7 +82,7 @@ Then use arrow keys to navigate through the options. Hit enter and, if applicabl
 
 See video below for walkthrough.
 
-https://drive.google.com/file/d/1dUM5SJLsQQVuR8Isvv0u-b9a6Z0OuVJ0/view
+https://drive.google.com/file/d/1SvSHLgb-QtP1ZX4VjXMm7_AE2anAse_z/view
 
 ### Screenshots
 ![Start Prompts](assets/images/startPrompts.png)
