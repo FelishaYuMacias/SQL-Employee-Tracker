@@ -181,7 +181,9 @@ function addEmployee() {
 }
 function employeeRoles(roleOptions) {
     db.query("SELECT * FROM employee", (err, results)=>{
-        if(err)throw err;
+        if(err){
+            console.log(err);
+        } else {
             const managerOptions = results.map(manager =>{
                 return {
                     name:`${manager.first_name} ${manager.last_name}`, value:`${manager.id}`
@@ -234,8 +236,9 @@ function employeeRoles(roleOptions) {
                 })
             }
         })
-
+        }
     })
+        
 }
 
 
@@ -253,27 +256,30 @@ function updateRole(){
         JOIN role ON employee.role_id = role.id 
         LEFT JOIN department ON role.department_id = department.id
         LEFT JOIN employee manager ON manager.id=employee.manager_id`,(err, res)=>{
-    if(err)throw err;
-    const employees = res.map(({ id, first_name, last_name }) => ({
-      value: id,
-       name: `${first_name} ${last_name}`      
-    }));
-    getRole(employees);
-  });
+    if(err) {
+        console.log(err)
+    } else {
+        const employees = res.map(({ id, first_name, last_name }) => ({
+          value: id,
+           name: `${first_name} ${last_name}`      
+        }));
+        getRole(employees);
+    }
+  })
 }
 
 function getRole(employees){
-db.query(`SELECT 
-role.id, 
-role.title, 
-FROM role`,(err, res)=>{
-  if(err)throw err;
-  let roleChoices = res.map(({ id, title,}) => ({
-    value: id, 
-    name: `${title}`      
-  }));
-  getUpdatedRole(employees, roleChoices);
-});
+db.query(`SELECT * FROM role`,(err, res)=>{
+  if(err) {
+      console.log(err)
+  } else {
+      let roleChoices = res.map(({ id, title,}) => ({
+        value: id, 
+        name: `${title}`      
+      }));
+      getUpdatedRole(employees, roleChoices);
+}
+})
 }
 
 function getUpdatedRole(employees, roleChoices) {
@@ -290,8 +296,7 @@ inquirer
       message: "What is the employee's new role?",
       type: "list",
       choices: roleChoices
-    },
-
+    }
   ]).then(({newRole_id,employee_id }) => {
       db.query("UPDATE employee SET employee.role_id = ? WHERE id=?",[newRole_id,employee_id],(err)=>{
           if(err){
@@ -303,10 +308,13 @@ inquirer
       });
   });
 }
+
 //function to update an existing employee's manager
 function updateManager () {
     db.query("SELECT * FROM employee", (err, results)=>{
-        if(err)throw err;
+        if(err){
+            console.log(err);
+        } else {
             const choices = results.map(choice =>{
                 return {
                     name:`${choice.first_name} ${choice.last_name}`, value:`${choice.id}`
@@ -336,7 +344,7 @@ function updateManager () {
                         })
             })
         }
-    )
+     } )
     
 }
 //Calling the function so prompts will appear on open
