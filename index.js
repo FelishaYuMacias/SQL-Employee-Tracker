@@ -168,10 +168,27 @@ function addRole () {
   })
 });
 }
-//funcion to add a new employee
-function addEmployee () {
-    inquirer.prompt([
-
+//functions to add a new employee
+function addEmployee() {
+    db.query("SELECT * FROM role", (err, results)=>{
+        if(err)throw err;
+        const roleOptions = results.map(oneRole =>{
+            return {
+                name:`${oneRole.title}`, value:`${oneRole.id}`
+            }
+        })
+        employeeRoles(roleOptions);
+        });
+}
+function employeeRoles(roleOptions) {
+    db.query("SELECT * FROM employee", (err, results)=>{
+            const managerOptions = results.map(manager =>{
+                return {
+                    name:`${manager.first_name} ${manager.last_name}`, value:`${manager.id}`
+                }
+            })
+  inquirer
+    .prompt([
         {
             name: "first_name",
             message: "What is the first name of the employee?",
@@ -184,36 +201,41 @@ function addEmployee () {
         },
         {
             name: "role_id",
-            message: "What is the employee's role id?",
-            type: "input"
+            message: "What is the employee's role?",
+            type: "list",
+            choices: roleOptions
         },
         {
             name: "manager_id",
-            message: "What is the employee's manager's id?",
-            type: "input"
+            message: "What is the employee's manager?",
+            type: "list",
+            choices: managerOptions
         }
-    ]).then(({first_name,last_name,role_id, manager_id }) => {
-        //allows for no manager id
-        if (manager_id){
-            db.query("INSERT INTO employee(first_name,last_name,role_id, manager_id)VALUES(?,?,?,?)",[first_name,last_name,role_id, manager_id],(err,data)=>{
-                if(err){
-                    console.log(err);
-                } else {    
-                console.log("Employee added!")
-                startQuestion ()
-                        }
-                    }) 
-        } else {
-            db.query("INSERT INTO employee(first_name,last_name,role_id)VALUES(?,?,?)",[first_name,last_name,role_id],(err,data)=>{
-                if(err){
-                    console.log(err);
-                } else {    
-                console.log("Employee added!")
-                startQuestion ()
-                        }
-                    })
-        }
-    })
+  ]).then(({first_name,last_name,role_id, manager_id }) => {
+    //allows for no manager id
+    if (manager_id){
+        db.query("INSERT INTO employee(first_name,last_name,role_id, manager_id)VALUES(?,?,?,?)",[first_name,last_name,role_id, manager_id],(err=>{
+            if(err){
+                console.log(err);
+            } else {    
+            console.log("Employee added!")
+            startQuestion ()
+                    }
+                }) 
+    } else {
+        db.query("INSERT INTO employee(first_name,last_name,role_id)VALUES(?,?,?)",[first_name,last_name,role_id],(err)=>{
+            if(err){
+                console.log(err);
+            } else {    
+            console.log("Employee added!")
+            startQuestion ()
+                    }
+                })
+    }
+})
+}
+)
+
 }
 //functions to update the role of an existing employee
 
